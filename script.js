@@ -5,11 +5,15 @@
   }
 
   const gameBoard = (() => {
+    const boardSpots = document.getElementsByClassName("spot");
     let array =
-      [["X", "O", "X"],
-      ["O", "X", "O"],
-      ["O", "X", "O"]];
-    return { array };
+      ["X", "O", "X", "O", "X", "O", "O", "X", "O"];
+    const render = () => {
+      for (let i = 0; i < boardSpots.length; i++) {
+        boardSpots[i].textContent = array[i];
+      }
+    }
+    return { render };
   })();
 
   const gameControler = (() => {
@@ -18,4 +22,5 @@
 
   const player1 = playerFactory("Adam", "X");
   const player2 = playerFactory("Eve", "O");
+  gameBoard.render();
 })();
