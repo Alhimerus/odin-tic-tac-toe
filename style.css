@@ -37,3 +37,11 @@ h1 {
   width: min(20vh, 20vw);
   height: min(20vh, 20vw);
 }
+
+#gameboard .spot:hover {
+  background-color: rgba(200, 200, 200, 0.9);
+}
+
+#gameboard .spot:active {
+  background-color: rgba(175, 175, 175, 0.9);
+}
