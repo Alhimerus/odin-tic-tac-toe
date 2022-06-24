@@ -19,9 +19,9 @@ h1 {
 
 #gameboard {
   display: grid;
-  padding: calc(5px + 1vh);
+  padding: min(calc(5px + 1vw), calc(5px + 1vh));
   background-color: rgb(0, 0, 0);
-  gap: calc(5px + 1vh);
+  gap: min(calc(5px + 1vw), calc(5px + 1vh));
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
 }
@@ -32,7 +32,7 @@ h1 {
   align-items: center;
   user-select: none;
   background-color: rgb(255, 255, 255);
-  padding: calc(5px + 0.5vh);
+  padding: min(calc(5px + 1vw), calc(5px + 1vh));
   font-size: min(18vh, 18vw);
   width: min(20vh, 20vw);
   height: min(20vh, 20vw);
