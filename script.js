@@ -1,15 +1,21 @@
-const playerFactory = (name) => {
+const playerFactory = (name, sign) => {
   let points = 0;
   const addPoints = function () {
-    this.points += 1;
+    points += 1;
   }
   const resetPoints = function () {
-    this.points = 0;
+    points = 0;
   }
   const setName = function (newName) {
-    this.name = newName;
+    name = newName;
   }
-  return { name, points, addPoints, resetPoints, setName };
+  const setSign = function (newSign) {
+    sign = newSign;
+  }
+  const getPoints = () => { return points };
+  const getName = () => { return name };
+  const getSign = () => { return sign };
+  return { getPoints, addPoints, resetPoints, setName, getName, setSign, getSign };
 }
 
 const gameBoard = (() => {
@@ -25,10 +31,16 @@ const gameBoard = (() => {
 })();
 
 const gameControler = (() => {
-  const init = () => {
-    gameBoard.render()
+  let players = [];
+  const createPlayers = () => {
+    players[0] = playerFactory("Adam", "X");
+    players[1] = playerFactory("Eve", "O");
   }
-  return { init };
+  const init = () => {
+    createPlayers();
+    gameBoard.render();
+  }
+  return { init, createPlayers, players };
 })();
 
 gameControler.init();
