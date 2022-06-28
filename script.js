@@ -1,26 +1,34 @@
-(function () {
-  const playerFactory = (name, sign) => {
-    let points = 0;
-    return { name, sign, points };
+const playerFactory = (name) => {
+  let points = 0;
+  const addPoints = function () {
+    this.points += 1;
   }
+  const resetPoints = function () {
+    this.points = 0;
+  }
+  const setName = function (newName) {
+    this.name = newName;
+  }
+  return { name, points, addPoints, resetPoints, setName };
+}
 
-  const gameBoard = (() => {
-    const boardSpots = document.getElementsByClassName("spot");
-    let array =
-      ["X", "O", "X", "O", "X", "O", "O", "X", "O"];
-    const render = () => {
-      for (let i = 0; i < boardSpots.length; i++) {
-        boardSpots[i].textContent = array[i];
-      }
+const gameBoard = (() => {
+  const boardSpots = document.getElementsByClassName("spot");
+  let array = ["X", "O", "X", "O", "X", "O", "O", "X", "O"];
+
+  const render = () => {
+    for (let i = 0; i < boardSpots.length; i++) {
+      boardSpots[i].textContent = array[i];
     }
-    return { render };
-  })();
-
-  const gameControler = (() => {
-    return {};
-  })();
-
-  const player1 = playerFactory("Adam", "X");
-  const player2 = playerFactory("Eve", "O");
-  gameBoard.render();
+  }
+  return { render };
 })();
+
+const gameControler = (() => {
+  const init = () => {
+    gameBoard.render()
+  }
+  return { init };
+})();
+
+gameControler.init();
