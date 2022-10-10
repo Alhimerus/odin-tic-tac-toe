@@ -32,6 +32,7 @@ const gameBoard = (() => {
 
 const gameControler = (() => {
   let players = [];
+  const currentPlayer = { number: 0 };
   const createPlayers = () => {
     players[0] = playerFactory("Adam", "X");
     players[1] = playerFactory("Eve", "O");
@@ -40,7 +41,15 @@ const gameControler = (() => {
     createPlayers();
     gameBoard.render();
   }
-  return { init, createPlayers, players };
+  const changeCurrentPlayer = () => {
+    if (currentPlayer.number === 0) {
+      currentPlayer.number = 1;
+    } else {
+      currentPlayer.number = 0;
+    }
+  }
+  const getCurrentPlayer = () => { return players[currentPlayer.number] };
+  return { init, createPlayers, changeCurrentPlayer, getCurrentPlayer };
 })();
 
 gameControler.init();
