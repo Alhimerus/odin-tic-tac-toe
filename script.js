@@ -20,14 +20,28 @@ const playerFactory = (name, sign) => {
 
 const gameBoard = (() => {
   const boardSpots = document.getElementsByClassName("spot");
-  let array = ["X", "O", "X", "O", "X", "O", "O", "X", "O"];
+  let array = ["", "", "", "", "", "", "", "", ""];
 
   const render = () => {
     for (let i = 0; i < boardSpots.length; i++) {
       boardSpots[i].textContent = array[i];
     }
   }
-  return { render };
+  const placeSign = (i) => {
+    if (array[i] == "") {
+      array[i] = gameControler.getCurrentPlayer().getSign()
+      gameBoard.render();
+      gameControler.changeCurrentPlayer();
+    }
+  }
+  const bindEvents = () => {
+    for (let i = 0; i < boardSpots.length; i++) {
+      boardSpots[i].addEventListener("click", () => {
+        placeSign(i);
+      })
+    }
+  }
+  return { render, placeSign, bindEvents };
 })();
 
 const gameControler = (() => {
@@ -40,6 +54,7 @@ const gameControler = (() => {
   const init = () => {
     createPlayers();
     gameBoard.render();
+    gameBoard.bindEvents();
   }
   const changeCurrentPlayer = () => {
     if (currentPlayer.number === 0) {
