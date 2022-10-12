@@ -20,6 +20,16 @@ const playerFactory = (name, sign) => {
 
 const gameBoard = (() => {
   const boardSpots = document.getElementsByClassName("spot");
+  const winningTrios = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ]
   let array = ["", "", "", "", "", "", "", "", ""];
 
   const render = () => {
@@ -28,16 +38,54 @@ const gameBoard = (() => {
     }
   }
   const placeSign = (i) => {
+    array[i] = gameControler.getCurrentPlayer().getSign()
+  }
+  const checkIfSameSign = (index1, index2, index3) => {
+    if (array[index1] === array[index2] && array[index1] === array[index3] && array[index1] !== "") {
+      return true;
+    }
+  }
+  const checkIfFull = () => {
+    let i = 0;
+    while (i < 9) {
+      if (array[i] === "") {
+        return false;
+      }
+      i++;
+    }
+    return true;
+  }
+  const checkForWin = () => {
+    let result;
+    for (let i = 0; i < 8; i++) {
+      result = checkIfSameSign(winningTrios[i][0], winningTrios[i][1], winningTrios[i][2]);
+      if (result === true) {
+        return true;
+      }
+    }
+  }
+  const resetBoard = () => {
+    array = ["", "", "", "", "", "", "", "", ""];
+    gameBoard.render();
+  }
+  const makeAMove = (i) => {
     if (array[i] == "") {
-      array[i] = gameControler.getCurrentPlayer().getSign()
+      placeSign(i);
       gameBoard.render();
+      if (checkForWin() === true) {
+        console.log(gameControler.getCurrentPlayer().getName() + " won!");
+        resetBoard();
+      } else if (checkIfFull() === true) {
+        console.log("It's a tie!");
+        resetBoard();
+      }
       gameControler.changeCurrentPlayer();
     }
   }
   const bindEvents = () => {
     for (let i = 0; i < boardSpots.length; i++) {
       boardSpots[i].addEventListener("click", () => {
-        placeSign(i);
+        makeAMove(i);
       })
     }
   }
