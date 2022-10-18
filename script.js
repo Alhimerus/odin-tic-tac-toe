@@ -66,14 +66,15 @@ const gameBoard = (() => {
   }
   const resetBoard = () => {
     array = ["", "", "", "", "", "", "", "", ""];
-    gameBoard.render();
+    render();
   }
   const makeAMove = (i) => {
     if (array[i] == "") {
       placeSign(i);
-      gameBoard.render();
+      render();
       if (checkForWin() === true) {
         console.log(gameControler.getCurrentPlayer().getName() + " won!");
+        gameControler.getCurrentPlayer().addPoints();
         resetBoard();
       } else if (checkIfFull() === true) {
         console.log("It's a tie!");
@@ -82,17 +83,19 @@ const gameBoard = (() => {
       gameControler.changeCurrentPlayer();
     }
   }
-  const bindEvents = () => {
+  const bindBoardEvents = () => {
     for (let i = 0; i < boardSpots.length; i++) {
       boardSpots[i].addEventListener("click", () => {
         makeAMove(i);
       })
     }
   }
-  return { render, placeSign, bindEvents };
+  return { resetBoard, bindBoardEvents };
 })();
 
 const gameControler = (() => {
+  const restartButton = document.getElementById("restart");
+  const changeVSButton = document.getElementById("changeVS");
   let players = [];
   const currentPlayer = { number: 0 };
   const createPlayers = () => {
@@ -101,8 +104,9 @@ const gameControler = (() => {
   }
   const init = () => {
     createPlayers();
-    gameBoard.render();
-    gameBoard.bindEvents();
+    gameBoard.resetBoard();
+    gameBoard.bindBoardEvents();
+    bindControlerEvents();
   }
   const changeCurrentPlayer = () => {
     if (currentPlayer.number === 0) {
@@ -111,8 +115,16 @@ const gameControler = (() => {
       currentPlayer.number = 0;
     }
   }
+  const restart = () => {
+    createPlayers();
+    gameBoard.resetBoard();
+    currentPlayer.number = 0;
+  }
+  const bindControlerEvents = () => {
+    restartButton.addEventListener("click", restart);
+  }
   const getCurrentPlayer = () => { return players[currentPlayer.number] };
-  return { init, createPlayers, changeCurrentPlayer, getCurrentPlayer };
+  return { init, createPlayers, changeCurrentPlayer, getCurrentPlayer, restart };
 })();
 
 gameControler.init();

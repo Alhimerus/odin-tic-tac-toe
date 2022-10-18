@@ -17,6 +17,31 @@ h1 {
   padding: 10px 20px;
 }
 
+div#header {
+  margin: 30px;
+  display: flex;
+  align-items: center;
+  gap: 35px;
+}
+
+div#header button {
+  border: 6px solid rgb(0, 0, 0);
+  box-shadow: inset -3px -3px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 27px;
+  padding: 10px 20px;
+  font-size: 18px;
+  width: 210px;
+  background-color: rgb(255, 255, 255);
+}
+
+div#header button:hover {
+  background-color: rgb(230, 230, 230);
+}
+
+div#header button:active {
+  box-shadow: inset 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+
 #gameboard {
   display: grid;
   padding: min(calc(5px + 1vw), calc(5px + 1vh));
