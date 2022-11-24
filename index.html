@@ -25,6 +25,36 @@
     <div class="spot"></div>
     <div class="spot"></div>
   </div>
+  <div id="player-info">
+    <div>
+      <div class="name">Player1</div>
+      <div class="sign">Sign: X</div>
+      <div class="score">Score: 0</div>
+    </div>
+    <div>
+      <div class="name">Player2</div>
+      <div class="sign">Sign: O</div>
+      <div class="score">Score: 0</div>
+    </div>
+  </div>
+  <div class="container shown">
+    <form class="player-creation">
+      <label for="name1" class="left">
+        Player 1 Name:
+        <input type="text" name="name1" id="name1" maxlength="15">
+      </label>
+      <label for="name2" class="right">
+        Player 2 Name:
+        <input type="text" name="name2" id="name2" maxlength="15">
+      </label>
+      <div class="left">Player 1 Sign: <span>X</span></div>
+      <div class="right">Player 2 Sign: <span>O</span></div>
+      <button type="button" id="change-signs" class="middle">
+        <img src="./icons/icon-1.svg" alt="Change signs" width="20px" height="20px">
+      </button>
+      <button type="button" id="create-players">Create Players</button>
+    </form>
+  </div>
 </body>
 
 </html>
