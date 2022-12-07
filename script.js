@@ -3,19 +3,10 @@ const playerFactory = (name, sign) => {
   const addPoints = function () {
     points += 1;
   }
-  const resetPoints = function () {
-    points = 0;
-  }
-  const setName = function (newName) {
-    name = newName;
-  }
-  const setSign = function (newSign) {
-    sign = newSign;
-  }
   const getPoints = () => { return points };
   const getName = () => { return name };
   const getSign = () => { return sign };
-  return { getPoints, addPoints, resetPoints, setName, getName, setSign, getSign };
+  return { getPoints, addPoints, getName, getSign };
 }
 
 const gameBoard = (() => {
@@ -73,11 +64,12 @@ const gameBoard = (() => {
       placeSign(i);
       render();
       if (checkForWin() === true) {
-        console.log(gameControler.getCurrentPlayer().getName() + " won!");
+        gameControler.showGameResult(gameControler.getCurrentPlayer().getName() + " won!");
         gameControler.getCurrentPlayer().addPoints();
+        gameControler.updatePlayerInfo();
         resetBoard();
       } else if (checkIfFull() === true) {
-        console.log("It's a tie!");
+        gameControler.showGameResult("It's a tie!");
         resetBoard();
       }
       gameControler.changeCurrentPlayer();
@@ -86,7 +78,9 @@ const gameBoard = (() => {
   const bindBoardEvents = () => {
     for (let i = 0; i < boardSpots.length; i++) {
       boardSpots[i].addEventListener("click", () => {
-        makeAMove(i);
+        if (gameControler.getCurrentPlayer() !== undefined) {
+          makeAMove(i);
+        }
       })
     }
   }
@@ -94,16 +88,26 @@ const gameBoard = (() => {
 })();
 
 const gameControler = (() => {
-  const restartButton = document.getElementById("restart");
+  const newGameButton = document.getElementById("newGame");
   const changeVSButton = document.getElementById("changeVS");
+  const creationPlayerNames = document.querySelectorAll(".player-creation .name");
+  const creationPlayerSigns = document.querySelectorAll(".player-creation>.sign>span");
+  const changeSignsButton = document.getElementById("change-signs");
+  const createPlayersButton = document.getElementById("create-players");
+  const creationContainer = document.querySelector("div.container.player-creation")
+  const playerInfoNames = document.querySelectorAll("#player-info .name");
+  const playerInfoSigns = document.querySelectorAll("#player-info .sign span");
+  const playerInfoScores = document.querySelectorAll("#player-info .score span");
+  const gameResultButton = document.querySelector(".game-result button");
+  const gameResultContainer = document.querySelector("div.container.game-result");
+  const gameResultMessage = document.querySelector(".game-result span");
   let players = [];
   const currentPlayer = { number: 0 };
   const createPlayers = () => {
-    players[0] = playerFactory("Adam", "X");
-    players[1] = playerFactory("Eve", "O");
+    players[0] = playerFactory(creationPlayerNames[0].value, creationPlayerSigns[0].textContent);
+    players[1] = playerFactory(creationPlayerNames[1].value, creationPlayerSigns[1].textContent);
   }
   const init = () => {
-    createPlayers();
     gameBoard.resetBoard();
     gameBoard.bindBoardEvents();
     bindControlerEvents();
@@ -116,15 +120,62 @@ const gameControler = (() => {
     }
   }
   const restart = () => {
-    createPlayers();
+    changeVisibility(creationContainer);
     gameBoard.resetBoard();
     currentPlayer.number = 0;
   }
+  const changeSigns = () => {
+    if (creationPlayerSigns[0].textContent === "X") {
+      creationPlayerSigns[0].textContent = "O";
+      creationPlayerSigns[1].textContent = "X";
+    } else {
+      creationPlayerSigns[0].textContent = "X";
+      creationPlayerSigns[1].textContent = "O";
+    }
+  }
+  const changeVisibility = (node) => {
+    if (node.classList.contains("shown")) {
+      node.classList.remove("shown");
+      node.classList.add("hidden");
+    } else if (node.classList.contains("hidden")) {
+      node.classList.remove("hidden");
+      node.classList.add("shown");
+    }
+  }
+  const resetPlayerCreation = () => {
+    creationPlayerNames[0].value = "";
+    creationPlayerNames[1].value = "";
+    creationPlayerSigns[0].textContent = "X";
+    creationPlayerSigns[1].textContent = "O";
+  }
+  const updatePlayerInfo = () => {
+    for (let i = 0; i <= 1; i++) {
+      playerInfoNames[i].textContent = players[i].getName();
+      playerInfoSigns[i].textContent = players[i].getSign();
+      playerInfoScores[i].textContent = players[i].getPoints();
+    }
+  }
+  const showGameResult = (message) => {
+    gameResultMessage.textContent = message;
+    changeVisibility(gameResultContainer);
+  }
   const bindControlerEvents = () => {
-    restartButton.addEventListener("click", restart);
+    newGameButton.addEventListener("click", restart);
+    changeSignsButton.addEventListener("click", changeSigns);
+    createPlayersButton.addEventListener("click", () => {
+      if (creationPlayerNames[0].checkValidity() && creationPlayerNames[1].checkValidity()) {
+        createPlayers();
+        updatePlayerInfo();
+        changeVisibility(creationContainer);
+        resetPlayerCreation();
+      }
+    });
+    gameResultButton.addEventListener("click", () => {
+      changeVisibility(gameResultContainer);
+    })
   }
   const getCurrentPlayer = () => { return players[currentPlayer.number] };
-  return { init, createPlayers, changeCurrentPlayer, getCurrentPlayer, restart };
+  return { init, changeCurrentPlayer, getCurrentPlayer, updatePlayerInfo, showGameResult };
 })();
 
 gameControler.init();

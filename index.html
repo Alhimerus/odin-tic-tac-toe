@@ -10,7 +10,7 @@
 
 <body>
   <div id="header">
-    <button id="restart">Start/Restart</button>
+    <button id="newGame">New Game</button>
     <h1>Tic Tac Toe</h1>
     <button id="changeVS">Player vs Player</button>
   </div>
@@ -28,32 +28,40 @@
   <div id="player-info">
     <div>
       <div class="name">Player1</div>
-      <div class="sign">Sign: X</div>
-      <div class="score">Score: 0</div>
+      <div class="sign">Sign: <span>X</span></div>
+      <div class="score">Score: <span>0</span></div>
     </div>
     <div>
       <div class="name">Player2</div>
-      <div class="sign">Sign: O</div>
-      <div class="score">Score: 0</div>
+      <div class="sign">Sign: <span>O</span></div>
+      <div class="score">Score: <span>0</span></div>
     </div>
   </div>
-  <div class="container shown">
+  <div class="container hidden player-creation">
     <form class="player-creation">
       <label for="name1" class="left">
         Player 1 Name:
-        <input type="text" name="name1" id="name1" maxlength="15">
+        <input type="text" name="name1" id="name1" class="name" maxlength="10" pattern="[a-zA-Z]+" required>
+        <p>1 to 10 characters, letters only</p>
       </label>
       <label for="name2" class="right">
         Player 2 Name:
-        <input type="text" name="name2" id="name2" maxlength="15">
+        <input type="text" name="name2" id="name2" class="name" maxlength="10" pattern="[a-zA-Z]+" required>
+        <p>1 to 10 characters, letters only</p>
       </label>
-      <div class="left">Player 1 Sign: <span>X</span></div>
-      <div class="right">Player 2 Sign: <span>O</span></div>
+      <div class="left sign">Player 1 Sign: <span>X</span></div>
+      <div class="right sign">Player 2 Sign: <span>O</span></div>
       <button type="button" id="change-signs" class="middle">
         <img src="./icons/icon-1.svg" alt="Change signs" width="20px" height="20px">
       </button>
       <button type="button" id="create-players">Create Players</button>
     </form>
+  </div>
+  <div class="container game-result hidden">
+    <div class="game-result">
+      <span>It's a tie!</span>
+      <button>Okay</button>
+    </div>
   </div>
 </body>
 

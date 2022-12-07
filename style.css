@@ -86,7 +86,7 @@ div#header button:active {
   align-items: center;
   border-radius: 20px;
   padding: 10px;
-  width: 250px;
+  width: 300px;
   height: 150px;
 }
 
@@ -153,6 +153,16 @@ div#header button:active {
   font-size: 16px;
 }
 
+.player-creation>label>input:invalid {
+  outline: 2px solid rgba(240, 60, 60, 0.8);
+}
+
+.player-creation>label>p {
+  margin-top: 5px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.8);
+}
+
 .player-creation #change-signs {
   border: 3px solid rgb(0, 0, 0);
   display: flex;
@@ -184,5 +194,33 @@ div#header button:active {
 }
 
 .player-creation #create-players:active {
+  box-shadow: inset 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+
+.container .game-result {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+  border: 5px solid rgb(0, 0, 0);
+  border-radius: 35px;
+  padding: 25px 40px;
+  font-size: 64px;
+  align-items: center;
+}
+
+.container .game-result button {
+  padding: 5px 15px;
+  font-size: 24px;
+  border: 3px solid rgb(0, 0, 0);
+  border-radius: 15px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: inset -3px -3px 3px rgba(0, 0, 0, 0.3);
+}
+
+.container .game-result button:hover {
+  background-color: rgba(230, 230, 230);
+}
+
+.container .game-result button:active {
   box-shadow: inset 3px 3px 3px rgba(0, 0, 0, 0.3);
 }
