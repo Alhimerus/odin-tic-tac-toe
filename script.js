@@ -101,6 +101,7 @@ const gameControler = (() => {
   const gameResultButton = document.querySelector(".game-result button");
   const gameResultContainer = document.querySelector("div.container.game-result");
   const gameResultMessage = document.querySelector(".game-result span");
+  const currentPlayerSpan = document.querySelector("div#current-player span");
   let players = [];
   const currentPlayer = { number: 0 };
   const createPlayers = () => {
@@ -118,6 +119,7 @@ const gameControler = (() => {
     } else {
       currentPlayer.number = 0;
     }
+    updateCurrentPlayerSpan();
   }
   const restart = () => {
     changeVisibility(creationContainer);
@@ -159,13 +161,29 @@ const gameControler = (() => {
     gameResultMessage.textContent = message;
     changeVisibility(gameResultContainer);
   }
+  const updateCurrentPlayerSpan = () => {
+    currentPlayerSpan.textContent = getCurrentPlayer().getName();
+  }
+  const changeVSButtonContent = () => {
+    if (changeVSButton.textContent === "Player vs Player") {
+      changeVSButton.textContent = "Player vs AI (easy)";
+    } else if (changeVSButton.textContent === "Player vs AI (easy)") {
+      changeVSButton.textContent = "Player vs AI (hard)";
+    } else {
+      changeVSButton.textContent = "Player vs Player";
+    }
+  }
   const bindControlerEvents = () => {
-    newGameButton.addEventListener("click", restart);
+    newGameButton.addEventListener("click", () => {
+      restart();
+      resetPlayerCreation();
+    });
     changeSignsButton.addEventListener("click", changeSigns);
     createPlayersButton.addEventListener("click", () => {
       if (creationPlayerNames[0].checkValidity() && creationPlayerNames[1].checkValidity()) {
         createPlayers();
         updatePlayerInfo();
+        updateCurrentPlayerSpan();
         changeVisibility(creationContainer);
         resetPlayerCreation();
       }
@@ -173,6 +191,7 @@ const gameControler = (() => {
     gameResultButton.addEventListener("click", () => {
       changeVisibility(gameResultContainer);
     })
+    changeVSButton.addEventListener("click", changeVSButtonContent);
   }
   const getCurrentPlayer = () => { return players[currentPlayer.number] };
   return { init, changeCurrentPlayer, getCurrentPlayer, updatePlayerInfo, showGameResult };

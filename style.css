@@ -18,7 +18,7 @@ h1 {
 }
 
 div#header {
-  margin: 30px;
+  margin: 10px;
   display: flex;
   align-items: center;
   gap: 35px;
@@ -73,7 +73,6 @@ div#header button:active {
 
 #player-info {
   display: flex;
-  margin-top: 30px;
   font-size: 30px;
   gap: 40px;
 }
@@ -223,4 +222,14 @@ div#header button:active {
 
 .container .game-result button:active {
   box-shadow: inset 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+
+div#current-player {
+  margin: 25px 10px;
+  font-size: 36px;
+  font-weight: 500;
+}
+
+div#current-player span {
+  font-weight: 400;
 }
