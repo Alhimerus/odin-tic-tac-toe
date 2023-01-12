@@ -21,25 +21,25 @@ const gameBoard = (() => {
     [0, 4, 8],
     [2, 4, 6]
   ]
-  let array = ["", "", "", "", "", "", "", "", ""];
+  let boardArray = ["", "", "", "", "", "", "", "", ""];
 
   const render = () => {
     for (let i = 0; i < boardSpots.length; i++) {
-      boardSpots[i].textContent = array[i];
+      boardSpots[i].textContent = boardArray[i];
     }
   }
   const placeSign = (i) => {
-    array[i] = gameControler.getCurrentPlayer().getSign()
+    boardArray[i] = gameControler.getCurrentPlayer().getSign()
   }
   const checkIfSameSign = (index1, index2, index3) => {
-    if (array[index1] === array[index2] && array[index1] === array[index3] && array[index1] !== "") {
+    if (boardArray[index1] === boardArray[index2] && boardArray[index1] === boardArray[index3] && boardArray[index1] !== "") {
       return true;
     }
   }
   const checkIfFull = () => {
     let i = 0;
     while (i < 9) {
-      if (array[i] === "") {
+      if (boardArray[i] === "") {
         return false;
       }
       i++;
@@ -56,11 +56,11 @@ const gameBoard = (() => {
     }
   }
   const resetBoard = () => {
-    array = ["", "", "", "", "", "", "", "", ""];
+    boardArray = ["", "", "", "", "", "", "", "", ""];
     render();
   }
   const makeAMove = (i) => {
-    if (array[i] == "") {
+    if (boardArray[i] == "") {
       placeSign(i);
       render();
       if (checkForWin() === true) {
@@ -75,11 +75,75 @@ const gameBoard = (() => {
       gameControler.changeCurrentPlayer();
     }
   }
+  const makeComputerMoveEasy = () => {
+    let arrayWithEmptySpots = [];
+    for (let i = 0; i < 9; i++) {
+      if (boardArray[i] === "") {
+        arrayWithEmptySpots.push(i);
+      }
+    }
+    makeAMove(randomFromArray(arrayWithEmptySpots));
+  }
+  const makeComputerMoveHard = () => {
+    let arrayWithSpotValues = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    winningTrios.forEach(trio => {
+      arrayWithSpotValues[trio[0]] += getSpotValue(trio[0], trio[1], trio[2]);
+      arrayWithSpotValues[trio[1]] += getSpotValue(trio[1], trio[0], trio[2]);
+      arrayWithSpotValues[trio[2]] += getSpotValue(trio[2], trio[0], trio[1]);
+    });
+    let bestSpot = getIndexOfMaxValue(arrayWithSpotValues);
+    makeAMove(bestSpot);
+  }
+  let getSpotValue = (spot1, spot2, spot3) => {
+    if (boardArray[spot1] !== "") {
+      return -10;
+    }
+    let pairValue;
+    let getPairValue = () => {
+      let firstValue = (boardArray[spot2] === "") ? 0 : ((boardArray[spot2] === gameControler.getCurrentPlayer().getSign()) ? 1 : 4);
+      let secondValue = (boardArray[spot3] === "") ? 0 : ((boardArray[spot3] === gameControler.getCurrentPlayer().getSign()) ? 1 : 4);
+      return firstValue + secondValue;
+    }
+    pairValue = getPairValue();
+    switch (pairValue) {
+      case 0: return 1;
+      case 1: return 3;
+      case 2: return 20;
+      case 4: return 2;
+      case 5: return -1;
+      case 8: return 10;
+    }
+  }
+  const getIndexOfMaxValue = (array) => {
+    let maxValue = array[0];
+    let maxIndex = 0;
+    for (let i = 1; i < array.length; i++) {
+      if (array[i] > maxValue) {
+        maxValue = array[i];
+        maxIndex = i;
+      }
+    }
+    return maxIndex;
+  }
+  const randomFromArray = (array) => {
+    return array[Math.floor(Math.random() * array.length)];
+  }
   const bindBoardEvents = () => {
     for (let i = 0; i < boardSpots.length; i++) {
       boardSpots[i].addEventListener("click", () => {
         if (gameControler.getCurrentPlayer() !== undefined) {
           makeAMove(i);
+          if (gameControler.gamemode.value === "pvceasy" && gameControler.getCurrentPlayer().getName() === "Computer") {
+            makeComputerMoveEasy();
+          } else if (gameControler.gamemode.value === "pvcmedium" && gameControler.getCurrentPlayer().getName() === "Computer") {
+            if(Math.floor(Math.random()*2)===0) {
+              makeComputerMoveEasy();
+            } else {
+              makeComputerMoveHard();
+            }
+          } else if (gameControler.gamemode.value === "pvchard" && gameControler.getCurrentPlayer().getName() === "Computer") {
+            makeComputerMoveHard();
+          }
         }
       })
     }
@@ -89,7 +153,7 @@ const gameBoard = (() => {
 
 const gameControler = (() => {
   const newGameButton = document.getElementById("newGame");
-  const changeVSButton = document.getElementById("changeVS");
+  const changeVSSelect = document.getElementById("changeVS");
   const creationPlayerNames = document.querySelectorAll(".player-creation .name");
   const creationPlayerSigns = document.querySelectorAll(".player-creation>.sign>span");
   const changeSignsButton = document.getElementById("change-signs");
@@ -104,6 +168,7 @@ const gameControler = (() => {
   const currentPlayerSpan = document.querySelector("div#current-player span");
   let players = [];
   const currentPlayer = { number: 0 };
+  const gamemode = { value: "pvp" };
   const createPlayers = () => {
     players[0] = playerFactory(creationPlayerNames[0].value, creationPlayerSigns[0].textContent);
     players[1] = playerFactory(creationPlayerNames[1].value, creationPlayerSigns[1].textContent);
@@ -112,6 +177,7 @@ const gameControler = (() => {
     gameBoard.resetBoard();
     gameBoard.bindBoardEvents();
     bindControlerEvents();
+    resetPlayerCreation();
   }
   const changeCurrentPlayer = () => {
     if (currentPlayer.number === 0) {
@@ -125,6 +191,7 @@ const gameControler = (() => {
     changeVisibility(creationContainer);
     gameBoard.resetBoard();
     currentPlayer.number = 0;
+    gamemode.value = "pvp";
   }
   const changeSigns = () => {
     if (creationPlayerSigns[0].textContent === "X") {
@@ -149,6 +216,8 @@ const gameControler = (() => {
     creationPlayerNames[1].value = "";
     creationPlayerSigns[0].textContent = "X";
     creationPlayerSigns[1].textContent = "O";
+    changeVSSelect.value = "pvp";
+    creationPlayerNames[1].disabled = false;
   }
   const updatePlayerInfo = () => {
     for (let i = 0; i <= 1; i++) {
@@ -164,13 +233,16 @@ const gameControler = (() => {
   const updateCurrentPlayerSpan = () => {
     currentPlayerSpan.textContent = getCurrentPlayer().getName();
   }
-  const changeVSButtonContent = () => {
-    if (changeVSButton.textContent === "Player vs Player") {
-      changeVSButton.textContent = "Player vs AI (easy)";
-    } else if (changeVSButton.textContent === "Player vs AI (easy)") {
-      changeVSButton.textContent = "Player vs AI (hard)";
-    } else {
-      changeVSButton.textContent = "Player vs Player";
+  const changeGamemode = () => {
+    gamemode.value = changeVSSelect.value;
+  }
+  const changePlayer2NameStatus = () => {
+    if (gamemode.value === "pvp") {
+      creationPlayerNames[1].value = "";
+      creationPlayerNames[1].disabled = false;
+    } else if (gamemode.value === "pvceasy" || gamemode.value === "pvcmedium" || gamemode.value === "pvchard") {
+      creationPlayerNames[1].value = "Computer";
+      creationPlayerNames[1].disabled = true;
     }
   }
   const bindControlerEvents = () => {
@@ -191,10 +263,13 @@ const gameControler = (() => {
     gameResultButton.addEventListener("click", () => {
       changeVisibility(gameResultContainer);
     })
-    changeVSButton.addEventListener("click", changeVSButtonContent);
+    changeVSSelect.addEventListener("change", () => {
+      changeGamemode();
+      changePlayer2NameStatus();
+    });
   }
   const getCurrentPlayer = () => { return players[currentPlayer.number] };
-  return { init, changeCurrentPlayer, getCurrentPlayer, updatePlayerInfo, showGameResult };
+  return { init, changeCurrentPlayer, getCurrentPlayer, updatePlayerInfo, showGameResult, gamemode };
 })();
 
 gameControler.init();

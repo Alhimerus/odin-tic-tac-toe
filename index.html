@@ -10,9 +10,8 @@
 
 <body>
   <div id="header">
-    <button id="newGame">New Game</button>
     <h1>Tic Tac Toe</h1>
-    <button id="changeVS">Choose players</button>
+    <button id="newGame">New Game</button>
   </div>
   <div id="gameboard">
     <div class="spot"></div>
@@ -40,7 +39,7 @@
       <div class="score">Score: <span>0</span></div>
     </div>
   </div>
-  <div class="container hidden player-creation">
+  <div class="container shown player-creation">
     <form class="player-creation">
       <label for="name1" class="left">
         Player 1 Name:
@@ -57,7 +56,16 @@
       <button type="button" id="change-signs" class="middle">
         <img src="./icons/icon-1.svg" alt="Change signs" width="20px" height="20px">
       </button>
-      <button type="button" id="create-players">Create Players</button>
+      <label for="changeVS" class="whole-column">
+        Choose gamemode
+        <select name="changeVS" id="changeVS">
+          <option value="pvp">Player vs Player</option>
+          <option value="pvceasy">Player vs Computer (easy)</option>
+          <option value="pvcmedium">Player vs Computer (medium)</option>
+          <option value="pvchard">Player vs Computer (hard)</option>
+        </select>
+      </label>
+      <button type="button" id="create-players" class="whole-column">Create Players</button>
     </form>
   </div>
   <div class="container game-result hidden">

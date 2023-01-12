@@ -135,7 +135,7 @@ div#header button:active {
   grid-row: 2/3;
 }
 
-.container>.player-creation :nth-last-child(1) {
+.container>.player-creation>.whole-column {
   grid-column: 1/4;
 }
 
@@ -232,4 +232,21 @@ div#current-player {
 
 div#current-player span {
   font-weight: 400;
+}
+
+.player-creation select#changeVS {
+  font-size: 18px;
+  padding: 3px 5px;
+  border: 3px solid rgb(0, 0, 0);
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: inset -3px -3px 3px rgba(0, 0, 0, 0.3);
+}
+
+.player-creation select#changeVS:hover {
+  background-color: rgb(230, 230, 230);
+}
+
+.player-creation select#changeVS:active {
+  box-shadow: inset 3px 3px 3px rgba(0, 0, 0, 0.3);
 }
